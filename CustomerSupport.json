@@ -1,0 +1,305 @@
+{
+  "name": "Customer Support",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {},
+        "options": {}
+      },
+      "id": "1e23a619-2dff-484a-ae6e-d543cdff99d5",
+      "name": "Gmail Trigger",
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -560,
+        272
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "eUGtbxY8BhUd13gu",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $json.text }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "Customer Support",
+              "description": "An email that is related to helping out a customer. They may be asking questions about our policies or questions about our products or services."
+            },
+            {
+              "category": "Other",
+              "description": "Any mail that is not customer support related."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ce1cdb8b-957d-4ce1-b039-220d9576f6f4",
+      "name": "Text Classifier",
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1.1,
+      "position": [
+        -336,
+        272
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "maxTokens": 1024
+        }
+      },
+      "id": "177ce036-1f50-41db-b2a5-582733efd6ae",
+      "name": "OpenRouter Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -336,
+        480
+      ],
+      "credentials": {
+        "openRouterApi": {
+          "id": "L33sz1w9lwdqfvcn",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "# overview\nyou are a customer support agent for Steel Alborz. Your job is to respond to incoming emails with relevant information using your knowledgeBase tool.\n\n##Instructions\n- your output should be friendly and use emojis.\n- sign off as Mr.Helpful from Steel Alborz Solutions\n\n##Output\n- output only body content of the email"
+        }
+      },
+      "id": "c521f69c-4f7b-4b83-aec5-bb41097210e3",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        64,
+        16
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "maxTokens": 1024
+        }
+      },
+      "id": "8b851f05-d200-4eb0-821b-7495e2f08895",
+      "name": "OpenRouter Chat Model1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        64,
+        176
+      ],
+      "credentials": {
+        "openRouterApi": {
+          "id": "L33sz1w9lwdqfvcn",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "answer the question according to the document table.",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {
+          "queryName": "match_documents"
+        }
+      },
+      "id": "63597b08-2090-4b11-ae2b-27704ad24f73",
+      "name": "Supabase Vector Store",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        128,
+        304
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "UiYxR0hANlUcoLls",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "dc87c27c-3fe1-4f40-87db-1eed5292ca65",
+      "name": "Embeddings OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        128,
+        448
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "DghLv1tAXRW4TIJA",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "5d460411-613a-4d6e-9eca-e3244ff25573",
+      "name": "No Operation, do nothing",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -48,
+        608
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "reply",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "emailType": "text",
+        "message": "={{ $json.output }}",
+        "options": {
+          "appendAttribution": false,
+          "senderName": "MR.Helpful"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        384,
+        16
+      ],
+      "id": "2870d415-bb11-4ca5-a758-eae5bc2b04b4",
+      "name": "Reply to a message",
+      "webhookId": "069564e2-1a59-48e6-a55a-2f1969423112",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "eUGtbxY8BhUd13gu",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Classifier": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Reply to a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "82f47289-6cf1-4f47-b3be-d6a476e109a9",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3d6f8a0c17285c593c60096b06142a8c65b60764c72900948bf0e9fc73601404"
+  },
+  "nodeGroups": [],
+  "id": "Ta3BHoKuihu9y8Vs",
+  "tags": []
+}
