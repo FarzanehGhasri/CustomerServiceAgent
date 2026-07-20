@@ -11,6 +11,5 @@ Built for a fictional company, Steel Alborz Solutions, as a portfolio demonstrat
 3. AI Agent ("Mr. Helpful") – answers support questions using a knowledge-base tool.
 4. Supabase Vector Store + OpenAI Embeddings – semantic search over a documents table (RAG).
 5. Gmail Reply – sends the answer back in the original thread.
-# Tech stack: n8n · OpenRouter (LLM) · LangChain Text Classifier & AI Agent · Supabase Vector Store · OpenAI Embeddings · Gmail.
 
-The full file also includes an architecture diagram, a setup guide (import + credentials + Supabase documents/match_documents setup), and an improvements section.
+Tech stack: n8n · OpenRouter (LLM) · LangChain Text Classifier & AI Agent · Supabase Vector Store · OpenAI Embeddings · Gmail.
