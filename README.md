@@ -1,15 +1,29 @@
-***AI Customer Support Agent (n8n)***
+# AI Customer Support Agent (n8n)
 
-An automated, AI-powered customer support workflow built in n8n. It watches a Gmail inbox, classifies incoming email
-and for genuine support questions — drafts and sends a grounded reply using a Retrieval-Augmented Generation (RAG) knowledge base.
-Built for a fictional company, Steel Alborz Solutions, as a portfolio demonstration of AI agent orchestration in n8n.
+An automated, AI-powered customer support workflow built with **n8n**. The workflow monitors a Gmail inbox, classifies incoming emails, and—for genuine customer support requests—generates and sends grounded responses using a **Retrieval-Augmented Generation (RAG)** knowledge base.
 
-***What it does***
+This project was developed for the fictional company **Steel Alborz Solutions** as a portfolio demonstration of AI agent orchestration using n8n.
 
-1. Gmail Trigger – polls the inbox every minute.
-2. Text Classifier (LLM) – sorts email into Customer Support or Other (Other → ignored).
-3. AI Agent ("Mr. Helpful") – answers support questions using a knowledge-base tool.
-4. Supabase Vector Store + OpenAI Embeddings – semantic search over a documents table (RAG).
-5. Gmail Reply – sends the answer back in the original thread.
+## Workflow
 
-Tech stack: n8n · OpenRouter (LLM) · LangChain Text Classifier & AI Agent · Supabase Vector Store · OpenAI Embeddings · Gmail.
+The following diagram illustrates the overall workflow of the AI Customer Support Agent.
+
+![Customer Service Workflow](images/customer-service-flow.png)
+
+## What It Does
+
+1. **Gmail Trigger** – Polls the Gmail inbox every minute for new messages.
+2. **Text Classifier (LLM)** – Classifies each email as either **Customer Support** or **Other**. Emails classified as **Other** are ignored.
+3. **AI Agent ("Mr. Helpful")** – Answers customer support questions using a Retrieval-Augmented Generation (RAG) workflow.
+4. **Supabase Vector Store + OpenAI Embeddings** – Performs semantic search over the knowledge base stored in the `documents` table.
+5. **Gmail Reply** – Sends the generated response back to the customer in the original email thread.
+
+## Tech Stack
+
+- **n8n**
+- **OpenRouter (LLM)**
+- **LangChain AI Agent**
+- **LangChain Text Classifier**
+- **Supabase Vector Store**
+- **OpenAI Embeddings**
+- **Gmail**
