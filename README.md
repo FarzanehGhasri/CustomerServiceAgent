@@ -8,7 +8,7 @@ This project was developed for the fictional company **Steel Alborz Solutions** 
 
 The following diagram illustrates the overall workflow of the AI Customer Support Agent.
 
-![Customer Service Workflow](images/customer-service-flow.png)
+![Customer Service Workflow](images/FirstFlow.png)
 
 ## What It Does
 
